@@ -3,7 +3,24 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27004.2010
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Day01", "Day01\Day01.fsproj", "{1127358E-25C9-43BD-852E-C634FE9F9252}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E47130B2-27D0-4D6B-8C65-94990D45A00B}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
+EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1127358E-25C9-43BD-852E-C634FE9F9252}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1127358E-25C9-43BD-852E-C634FE9F9252}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1127358E-25C9-43BD-852E-C634FE9F9252}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1127358E-25C9-43BD-852E-C634FE9F9252}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
