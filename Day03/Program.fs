@@ -35,41 +35,55 @@ let changeDirection (s:MemorySlot, d:Direction)={
                 Elem=s.Elem
                 }
 
-let nextLocation(s:MemorySlot, l:Location) = {
+let nextLocation(s:MemorySlot, l:Location, e:int)= {
                 Location=l
                 Direction=s.Direction
                 LayerNumber=s.LayerNumber
-                Elem=s.Elem+1
+                Elem=s.Elem+e
                 }
 
-let nextLayer(s:MemorySlot, l:Location)={
+let nextLayer(s:MemorySlot, l:Location, e:int)={
                 Location=l
                 Direction=Up
                 LayerNumber=s.LayerNumber+1
-                Elem=s.Elem+1
+                Elem=s.Elem+e
                 }
 
-let nextSlot (slot: MemorySlot)=
+let nextSlot (slot: MemorySlot, e:int)=
     match slot.Direction with
     | Up -> if layerRightUp(slot) 
               then changeDirection(slot, Left)
-              else nextLocation(slot,goUp(slot.Location))
+              else nextLocation(slot,goUp(slot.Location), e)
     | Left -> if layerLeftUp(slot) 
               then changeDirection(slot, Down)
-              else nextLocation(slot,goLeft(slot.Location))
+              else nextLocation(slot,goLeft(slot.Location), e)
     | Down -> if layerLeftDown(slot) 
               then changeDirection(slot, Right)
-              else nextLocation(slot,goDown(slot.Location))
+              else nextLocation(slot,goDown(slot.Location),e)
     | Right -> if layerRightDown(slot) 
-               then nextLayer(slot, goRight(slot.Location))
-               else nextLocation(slot,goRight(slot.Location))
+               then nextLayer(slot, goRight(slot.Location),e)
+               else nextLocation(slot,goRight(slot.Location),e)
 
 let rec findSlot(num:int, acc: MemorySlot)=
     if num=acc.Elem then acc
-    else findSlot(num, nextSlot(acc))
+    else findSlot(num, nextSlot(acc,1))
 
 let manhatanDistance(l1:Location, l2:Location)=
     Math.Abs(l1.X-l2.X)+Math.Abs(l1.Y-l2.Y)
+
+// Part2
+let isAdjacent(s1:MemorySlot, s2:MemorySlot)= manhatanDistance(s1.Location,s2.Location)>0 && manhatanDistance(s1.Location,s2.Location)<=2
+
+let appendList(lst:MemorySlot list, elem:MemorySlot)=
+    if lst |> List.map(fun m -> m.Location) |> List.contains(elem.Location) 
+    then lst
+    else elem::lst
+
+let sumAdjacents(lst:MemorySlot list, curr:MemorySlot) = lst |> List.filter(fun x -> isAdjacent(x,curr)) |> List.sumBy(fun x -> x.Elem)
+
+let rec calculateFirstBigger(num:int, all:MemorySlot list, acc:MemorySlot)=
+    if num<acc.Elem then acc.Elem
+    else calculateFirstBigger(num, appendList(all,acc), nextSlot(acc, sumAdjacents(all,acc)))
 
 [<EntryPoint>]
 let main argv = 
@@ -77,7 +91,8 @@ let main argv =
     let start = {Location={X=0;Y=0}; Direction=Up; LayerNumber=0; Elem=1}
     let slot = findSlot(input,start)
     let result = manhatanDistance(start.Location,slot.Location)
-
+    let result2 = calculateFirstBigger(input, [], start)
     printfn "%A" result
+    printfn "%A" result2
     Console.Read()
     0 // return an integer exit code
