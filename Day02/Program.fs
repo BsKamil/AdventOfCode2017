@@ -4,21 +4,13 @@
 open FSharp.Data;
 open System;
 
-let readData = 
-    let csv = CsvFile.Load("data.csv", separators=";", hasHeaders=false)
-    let rows = csv.Rows
+let readData =  CsvFile.Load("data.csv", separators=";", hasHeaders=false).Rows 
+                    |> Seq.map(fun r -> r.Columns |> Seq.map(fun col -> Int32.Parse(col)))
 
-    rows |> Seq.map(fun r -> r.Columns |> Seq.map(fun col -> Int32.Parse(col)))
+let rowDiff (lst: seq<int>) = (lst |> Seq.max)-(lst |> Seq.min)
 
-let rowDiff (lst: seq<int>) =
-    let min = lst |> Seq.min
-    let max = lst |> Seq.max
-    max-min
-
-let calculateChecksum (matrix:seq<seq<int>>) =
-    let diffs = matrix |> Seq.map(fun row -> rowDiff(row))
-    diffs |> Seq.sum
-    
+let calculateChecksum (matrix:seq<seq<int>>) = matrix |> Seq.map(fun row -> rowDiff(row)) 
+                                                      |> Seq.sum
 //Part two
 
 let findEventlyDivine (lst: seq<int>) =
@@ -32,17 +24,17 @@ let findEventlyDivine (lst: seq<int>) =
         | head::tail -> if doModuloForElem(head,tail)>0 then doModuloForElem(head,tail) else findInSorted(tail)
         | [] -> 0
 
-    let sorted = lst |> Seq.sortDescending |> Seq.toList
-    findInSorted(sorted)
+    lst |> Seq.sortDescending 
+        |> Seq.toList 
+        |> findInSorted
 
 [<EntryPoint>]
 let main argv = 
-    let data = readData
-    let result = calculateChecksum data
-    printfn "%A" result
+    let result1 = readData |> calculateChecksum
+    printfn "%A" result1
 
-    let diffs2 = data |> Seq.map(fun row -> findEventlyDivine(row))
-    let res2 = diffs2 |> Seq.sum
-    printfn "%A" res2
+    let result2 = readData |> Seq.map(fun row -> findEventlyDivine(row)) 
+                           |> Seq.sum
+    printfn "%A" result2
     Console.ReadLine();
     0 // return an integer exit code
