@@ -10,10 +10,6 @@ let passwordValid (w:string[]) =
 
 //Part 2
 
-let fixSingle(str:string)= 
-    let fix="yyy"
-    if str.Length=1 then sprintf "%s%s" str fix else str
-
 let passValid2 (w:String[])=
     w.Length=(w |> Array.map(fun str -> str |> Seq.sort |> Seq.toArray |> String)
                 |> Array.distinct |> Array.length)
